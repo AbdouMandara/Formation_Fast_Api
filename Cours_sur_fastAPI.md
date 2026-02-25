@@ -78,4 +78,6 @@ Ensuite je pars dans **env.py** j'importe mes modèles pour que Alembic puisse l
 **Ex :** from models.tache import Tache
 Ensuite je vais à la ligne 22 de ce même fichier et je remplace**target_metadata = None** par : **target_metadata = Base.metadata** car je veux que Alembic prenne en compte tous les modèles qui héritent de la classe ```Base``` et pas seulement un modèle en particulier enfin de génerer ces tables dans la bdd
 Dans le cmd, je fais :**alembic revision** ensuite **alembic revision autogenerate -m "le message que tu veux"** pour créer une nouvelle version de la bdd (un peu comme git) en fonction des modèles que j'ai défini
-Ensuite je fais : **alembic upgrade head** pour appliquer les changements dans la bdd et créer les tables correspondantes à mes modèles
+Pour voir ma migration comme "créer la table tache" je vais dans  alembi/versions/ et je vois le fichier de migration que je viens de créer
+
+Ensuite je fais : **alembic upgrade head** pour appliquer les changements dans la bdd

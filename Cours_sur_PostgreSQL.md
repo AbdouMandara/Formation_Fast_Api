@@ -50,3 +50,5 @@ EX : psql -U user_api_tache -d api_tache
 **NB :** le mot de passe de **user_api_tache** est ````1234```
 
 Etant connecter sur cette bdd pour voir les tables ou relations : **\d** après le **#**
+
+Pour voir le contenu de la table **tache** je fais : \d "tache" créé à partir de mon modèle SQLAlchemy
