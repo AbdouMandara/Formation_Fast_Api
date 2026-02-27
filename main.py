@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Path
-from Schemas.Tache import Tache
+from fastapi import FastAPI, Path, HTTPException
+from Schemas.TacheCreation import TacheCreation
+from Schemas.Tache_mise_a_jour import TacheMiseAJour
 from sqlalchemy.orm import Session 
 from fastapi import Depends
 from database.database import SessionLocal
+import Crud.tache_crud as tache_crud
 #Ici on gère géneralement les endpoints
 
 #Cette fonction sert à gérer toute la session de la bdd
@@ -18,48 +20,60 @@ app = FastAPI(
     title = "Api de gestion des taches",
     description="""Cette API permet de faire un CRUD complet sur les taches"""
 )
-
-
 """
 db : Session = Depends(get_db)
 c'est pour dire que la variable db que j'ai déclaré est un param que je vais utiliser dans ma fonction
 db sera une Session qui depend de la fonction get_db qui gère la connexion à la bdd
 
 """
-@app.get("/home")
+@app.get("/",
+         summary="Cette route retourne toutes les taches de notre bdd ")
 def get_all_taches(db : Session = Depends(get_db)):
-    return {"Message" : "Toutes mes taches"}
-@app.get("/")
-def index():
-    return {"message": "hello je suis FastAPI"}
+    try :
+        mes_taches = tache_crud.get_taches(db)
+        return mes_taches
+    except Exception:
+        raise HTTPException(status_code=500, detail="Erreur interne")
 
+# Endpoint pour avoir une tache en fonction de son id
 @app.get("/taches/{tache_id}",
                     summary="Cette route sert à recuperer une tache précise", # Bref résumé de ce que fait cette route
                     description="Pour récuperer les infos d'une tache précise selon son ID", #Description de notre route
                     response_description="Infos d'une tache au format JSON" # Description de ce qu'on doit avoir comme reponse
                     )
+
 def get_taches(tache_id : int =Path(description="ID de la tache")):
     return {
         "id de la tache" : tache_id,
         "Titre de la tache": f"Tache {tache_id}"
     }
     
-@app.get("/taches")
-def create_tache(t : Tache):
-    return{
-        "Message" : "tache reçu",
-        "La tache est : " : t
-    }
-
+# Endpoint pour créer une tache
+@app.post("/taches",
+          summary="Cette route sert à créer une tache")
+def create_tache(t : TacheCreation, db : Session = Depends(get_db)):
+    try:
+        db_tache = tache_crud.create_tache(t, db)
+        return db_tache
+    except Exception:
+        raise HTTPException(status_code=500, detail="Erreur interne")
+    
+# Endpoint pour updater une tache
+"""
 @app.put("/taches/{tache_id}")
-def update_tache(tache_id : int, t : Tache):
+def update_tache(tache_id : int, t : TacheMiseAJour, db : Session = Depends(get_db)):
+    try:
+        db_tache = tache_crud.update_tache(tache_id, t, db)
+    except Exception :
+        raise HTTPException(status_code=500, detail="Erreur au niveau de la mise à jour")
+        
     return {
         "Message" : f"Je vais modifier le num de la tache {tache_id}",
         "Nouvelle valeur " : t
     }
     
+"""
 @app.delete("/taches/{tache_id}")
-def delete_tache(tache_id : int):
-    return {
-        "Message" : f"Je vais supprimer la tache de num {tache_id}"
-    }
+def delete_tache(tache_id : int, db : Session = Depends(get_db)):
+    db_tache = tache_crud.delete_tache(tache_id, db)
+    return db_tache

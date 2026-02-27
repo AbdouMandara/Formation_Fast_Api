@@ -1,13 +1,16 @@
 from pydantic import BaseModel, Field
 from enum import Enum
+from datetime import date as Date
 
 class Etat(str, Enum):
     AFAIRE = "A faire"
     TERMINE = "Terminé"
     EN_COURS= "En cours"
     
-class Tache(BaseModel) :
+class TacheMiseAJour(BaseModel) :
     id : int
     titre : str = Field(min_length=1)
-    description : str = Field(min_length=5)
     etat : Etat
+    date_echeance : Date
+    date_mise_a_jour: Date = Date.today()
+    description : str = Field(min_length=5)

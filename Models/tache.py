@@ -9,6 +9,7 @@ class Tache(Base) :
     # Je définis une colonne pour ma table en utilisant Column()
     id = Column(Integer, primary_key=True, index=True) #on met index = True pour mettre un index dessus car on va faire la recherche par rapport à l'id
     titre = Column(String)
+    description = Column(String)
     etat = Column(String)
     date_echeance = Column(Date)
     date_creation = Column(Date)

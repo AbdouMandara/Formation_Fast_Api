@@ -81,3 +81,15 @@ Dans le cmd, je fais :**alembic revision** ensuite **alembic revision autogenera
 Pour voir ma migration comme "créer la table tache" je vais dans  alembi/versions/ et je vois le fichier de migration que je viens de créer
 
 Ensuite je fais : **alembic upgrade head** pour appliquer les changements dans la bdd
+Si je modifies mon modèle SQLAlchemy et que je veux que les modifications soient prises en compte dans ma bdd, je dois faire une migration avec **alembic** pour que les modifications soient prises en compte dans la bdd, je ferai : **alembic revision autogenerate -m "le message que tu veux"** ensuite **alembic upgrade head** pour appliquer les changements dans la bdd
+
+#### A savoir : les commandes d'alembic
+
+|Commande                                   | Sert à quoi                           | Quand l’utiliser                   |
+| ------------------------------------------ | ------------------------------------- | ---------------------------------- |
+| `alembic revision --autogenerate -m "msg"` | **Créer un fichier de migration**     | Quand **tu modifies tes modèles**  |
+| `alembic upgrade head`                     | **Appliquer les migrations à la BDD** | Quand **tu veux modifier la base** |
+
+#### CRUD : Create, Read, Update, Delete
+
+Dans le dossier **crud/** on va créer des fonctions pour faire le CRUD (Create, Read, Update, Delete) sur nos modèles SQLAlchemy
